@@ -112,6 +112,16 @@ void uWeb::sendData(const int socket, const std::string &data) const
 #ifdef DEBUG
     std::cout << std::endl;
 #endif
+    const std::string header{"HTTP/1.0 200 OK\r\n"\
+                            "Server: uWeb\r\n"\
+                            "Connection: close\r\n"\
+                            "Content-Type: application/json; charset=UTF-8\r\n"\
+                            "Content-Length: "+std::to_string(data.size())+"\r\n"\
+                            "\r\n"};
+    if (write(socket, header.c_str(), header.size()) < 0)
+    {
+        std::cerr << "ERROR writing to socket (" << strerror(errno) << ")" << std::endl;
+    }
 
     if (write(socket, data.c_str(), data.size()) < 0)
 	{
